@@ -25,6 +25,10 @@ public class Expense {
     @Column(nullable = false)
     String name;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
+
     @Column(nullable = false)
     String amount;
 

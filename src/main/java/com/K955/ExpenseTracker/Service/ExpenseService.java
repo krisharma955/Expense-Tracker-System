@@ -2,8 +2,8 @@ package com.K955.ExpenseTracker.Service;
 
 import com.K955.ExpenseTracker.DTOs.Expense.ExpenseRequest;
 import com.K955.ExpenseTracker.DTOs.Expense.ExpenseResponse;
+import com.K955.ExpenseTracker.DTOs.Expense.ExpenseSummaryResponse;
 import com.K955.ExpenseTracker.Entity.Expense;
-import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ public interface ExpenseService {
 
     ExpenseResponse getExpenseById(Long userId, Long expenseId);
 
-    List<Expense> getAllExpenses(Long userId);
+    List<ExpenseSummaryResponse> getAllExpenses(Long userId);
 
-    ExpenseResponse updateExpense(Long userId, Long expenseId);
+    ExpenseResponse updateExpense(Long userId, Long expenseId, ExpenseRequest request);
 
-    Void softDelete(Long userId, Long expenseId);
+    void deleteExpense(Long userId, Long expenseId);
 }

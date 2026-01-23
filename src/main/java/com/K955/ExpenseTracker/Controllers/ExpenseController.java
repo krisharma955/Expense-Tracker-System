@@ -2,7 +2,7 @@ package com.K955.ExpenseTracker.Controllers;
 
 import com.K955.ExpenseTracker.DTOs.Expense.ExpenseRequest;
 import com.K955.ExpenseTracker.DTOs.Expense.ExpenseResponse;
-import com.K955.ExpenseTracker.Entity.Expense;
+import com.K955.ExpenseTracker.DTOs.Expense.ExpenseSummaryResponse;
 import com.K955.ExpenseTracker.Service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,21 +30,23 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Expense>> getAllExpenses() {
+    public ResponseEntity<List<ExpenseSummaryResponse>> getAllExpenses() {
         Long userId = 1L;
         return ResponseEntity.ok(expenseService.getAllExpenses(userId));
     }
 
     @PatchMapping("/{expenseId}")
-    public ResponseEntity<ExpenseResponse> updateExpense(@PathVariable Long expenseId) {
+    public ResponseEntity<ExpenseResponse> updateExpense(@PathVariable Long expenseId,
+                                                         @RequestBody ExpenseRequest request) {
         Long userId = 1L;
-        return ResponseEntity.ok(expenseService.updateExpense(userId, expenseId));
+        return ResponseEntity.ok(expenseService.updateExpense(userId, expenseId, request));
     }
 
     @DeleteMapping("/{expenseId}")
     public ResponseEntity<Void> deleteExpense(@PathVariable Long expenseId) {
         Long userId = 1L;
-        return ResponseEntity.ok(expenseService.softDelete(userId, expenseId));
+        expenseService.deleteExpense(userId, expenseId);
+        return ResponseEntity.noContent().build();
     }
 
 }
