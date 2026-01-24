@@ -1,6 +1,7 @@
 package com.K955.ExpenseTracker.Repository;
 
 import com.K955.ExpenseTracker.Entity.Expense;
+import com.K955.ExpenseTracker.Enums.Expense.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,5 +20,16 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             """
     )
     List<Expense> findAllExpenses(@Param("userId") Long userId);
+
+    @Query("""
+            SELECT e FROM Expense e
+            WHERE e.user.id = :userId
+            AND e.category = :category
+            AND e.deletedAt IS NULL
+            ORDER BY e.updatedAt DESC
+            """
+    )
+    List<Expense> findTravelExpenses(@Param("userId") Long userId,
+                                     @Param("category") Category category);
 
 }

@@ -1,5 +1,5 @@
 package com.K955.ExpenseTracker.Enums.Expense;
 
 public enum Category {
-    TRAVEL, SHOPPING, MEDICAL
+    TRAVEL, SHOPPING, MEDICAL, FOOD, EDUCATION, HOUSING, ENTERTAINMENT
 }

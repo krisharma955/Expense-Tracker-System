@@ -5,6 +5,7 @@ import com.K955.ExpenseTracker.DTOs.Expense.ExpenseResponse;
 import com.K955.ExpenseTracker.DTOs.Expense.ExpenseSummaryResponse;
 import com.K955.ExpenseTracker.Entity.Expense;
 import com.K955.ExpenseTracker.Entity.User;
+import com.K955.ExpenseTracker.Enums.Expense.Category;
 import com.K955.ExpenseTracker.Mapper.ExpenseMapper;
 import com.K955.ExpenseTracker.Repository.ExpenseRepository;
 import com.K955.ExpenseTracker.Repository.UserRepository;
@@ -92,5 +93,82 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new RuntimeException("Expense not found with expenseId: "+expenseId));
         expenseRepository.delete(expense);
+    }
+
+    @Override
+    public List<ExpenseSummaryResponse> getTravelExpenses(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with usedId: "+userId));
+        if(!user.getId().equals(userId)) {
+            throw new RuntimeException("Access Denied");
+        }
+        Category category = Category.TRAVEL;
+        return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
+    }
+
+    @Override
+    public List<ExpenseSummaryResponse> getShoppingExpenses(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with usedId: "+userId));
+        if(!user.getId().equals(userId)) {
+            throw new RuntimeException("Access Denied");
+        }
+        Category category = Category.SHOPPING;
+        return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
+    }
+
+    @Override
+    public List<ExpenseSummaryResponse> getMedicalExpenses(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with usedId: "+userId));
+        if(!user.getId().equals(userId)) {
+            throw new RuntimeException("Access Denied");
+        }
+        Category category = Category.MEDICAL;
+        return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
+    }
+
+    @Override
+    public List<ExpenseSummaryResponse> getFoodExpenses(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with usedId: "+userId));
+        if(!user.getId().equals(userId)) {
+            throw new RuntimeException("Access Denied");
+        }
+        Category category = Category.FOOD;
+        return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
+    }
+
+    @Override
+    public List<ExpenseSummaryResponse> getEducationExpenses(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with usedId: "+userId));
+        if(!user.getId().equals(userId)) {
+            throw new RuntimeException("Access Denied");
+        }
+        Category category = Category.EDUCATION;
+        return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
+    }
+
+    @Override
+    public List<ExpenseSummaryResponse> getHousingExpenses(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with usedId: "+userId));
+        if(!user.getId().equals(userId)) {
+            throw new RuntimeException("Access Denied");
+        }
+        Category category = Category.HOUSING;
+        return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
+    }
+
+    @Override
+    public List<ExpenseSummaryResponse> getEntertainmentExpenses(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with usedId: "+userId));
+        if(!user.getId().equals(userId)) {
+            throw new RuntimeException("Access Denied");
+        }
+        Category category = Category.ENTERTAINMENT;
+        return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
     }
 }
