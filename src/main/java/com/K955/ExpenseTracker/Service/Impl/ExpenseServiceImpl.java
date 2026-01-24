@@ -47,6 +47,9 @@ public class ExpenseServiceImpl implements ExpenseService {
         }
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new RuntimeException("Expense not found with expenseId: "+expenseId));
+        if(!expense.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Access Denied");
+        }
         return expenseMapper.toExpenseResponseFromExpense(expense);
     }
 
@@ -69,6 +72,9 @@ public class ExpenseServiceImpl implements ExpenseService {
         }
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new RuntimeException("Expense not found with expenseId: "+expenseId));
+        if(!expense.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Access Denied");
+        }
         expense.setName(request.name());
         expense.setAmount(request.amount());
         expense.setCategory(request.category());

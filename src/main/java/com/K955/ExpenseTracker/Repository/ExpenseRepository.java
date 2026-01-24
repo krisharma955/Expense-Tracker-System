@@ -13,7 +13,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
     @Query("""
             SELECT e FROM Expense e
-            WHERE e.deletedAt IS NULL
+            WHERE e.user.id = :userId
+            AND e.deletedAt IS NULL
             ORDER BY e.updatedAt DESC
             """
     )
