@@ -4,6 +4,7 @@ import com.K955.ExpenseTracker.DTOs.Auth.AuthResponse;
 import com.K955.ExpenseTracker.DTOs.Auth.LoginRequest;
 import com.K955.ExpenseTracker.DTOs.Auth.SignupRequest;
 import com.K955.ExpenseTracker.Entity.User;
+import com.K955.ExpenseTracker.Errors.BadRequestException;
 import com.K955.ExpenseTracker.Mapper.UserMapper;
 import com.K955.ExpenseTracker.Repository.UserRepository;
 import com.K955.ExpenseTracker.Security.JwtService;
@@ -37,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse signup(SignupRequest request) {
         Optional<User> user = userRepository.findByEmail(request.email());
         if(user.isPresent()) {
-            throw new RuntimeException("User already exists with email: "+request.email());
+            throw new BadRequestException("User already exists!");
         }
         User newUser = User.builder()
                 .name(request.name())

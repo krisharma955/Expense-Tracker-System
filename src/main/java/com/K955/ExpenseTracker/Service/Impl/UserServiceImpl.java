@@ -3,13 +3,14 @@ package com.K955.ExpenseTracker.Service.Impl;
 import com.K955.ExpenseTracker.DTOs.User.UpdateUserRequest;
 import com.K955.ExpenseTracker.DTOs.User.UserProfileResponse;
 import com.K955.ExpenseTracker.Entity.User;
+import com.K955.ExpenseTracker.Errors.BadRequestException;
+import com.K955.ExpenseTracker.Errors.ResourceNotFoundException;
 import com.K955.ExpenseTracker.Mapper.UserMapper;
 import com.K955.ExpenseTracker.Repository.UserRepository;
 import com.K955.ExpenseTracker.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +27,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserProfileResponse getProfile(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with userId: "+userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
         if(!user.getId().equals(userId)) {
-            throw new RuntimeException("Access Denied");
+            throw new BadRequestException("Access Denied");
         }
         return userMapper.toUserProfileResponseFromUser(user);
     }
@@ -36,9 +37,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserProfileResponse updateUserProfile(Long userId, UpdateUserRequest request) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with userId: "+userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
         if(!user.getId().equals(userId)) {
-            throw new RuntimeException("Access Denied");
+            throw new BadRequestException("Access Denied");
         }
         user.setName(request.name());
         user.setPassword(passwordEncoder.encode(request.password()));
@@ -49,16 +50,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void deleteUserProfile(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with userId: "+userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
         if(!user.getId().equals(userId)) {
-            throw new RuntimeException("Access Denied");
+            throw new BadRequestException("Access Denied");
         }
         userRepository.delete(user);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws ResourceNotFoundException {
         return userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: "+username));
+                .orElseThrow(() -> new ResourceNotFoundException("User", username));
     }
 }
