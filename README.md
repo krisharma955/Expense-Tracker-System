@@ -331,45 +331,6 @@ This application implements multiple security layers:
 
 ---
 
-## 🔑 Environment Variables
-
-For production deployment, use environment variables instead of hardcoding sensitive data:
-
-```bash
-export DB_URL=jdbc:postgresql://localhost:5432/expense_tracker
-export DB_USERNAME=your_username
-export DB_PASSWORD=your_password
-export JWT_SECRET=your-super-secret-key
-export JWT_EXPIRATION=86400000
-```
-
-Update `application.yaml`:
-```yaml
-spring:
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-
-jwt:
-  secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION}
-```
-
----
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-./mvnw test
-
-# Run with coverage
-./mvnw test jacoco:report
-```
-
----
-
 ## 📦 Dependencies
 
 ### Core Dependencies
@@ -389,28 +350,6 @@ jwt:
 
 ---
 
-## 🚀 Deployment
-
-### Docker Deployment (Recommended)
-
-Create a `Dockerfile`:
-```dockerfile
-FROM eclipse-temurin:21-jdk-alpine
-WORKDIR /app
-COPY target/*.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
-```
-
-Build and run:
-```bash
-./mvnw clean package
-docker build -t expense-tracker .
-docker run -p 8080:8080 expense-tracker
-```
-
----
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
@@ -423,48 +362,11 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
-## 📝 Future Enhancements
-
-- [ ] Add expense analytics and reports
-- [ ] Implement budget tracking and alerts
-- [ ] Add recurring expense support
-- [ ] Export functionality (CSV, PDF)
-- [ ] Multi-currency support
-- [ ] Expense sharing between users
-- [ ] Mobile app integration
-- [ ] Email notifications
-- [ ] Data visualization dashboard
-
----
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-## 👨‍💻 Author
-
-**Krish Sharma**
-- GitHub: [@krisharma955](https://github.com/krisharma955)
-- Email: krishsharma9005@gmail.com
-
----
-
-## 🙏 Acknowledgments
-
-- Spring Boot team for the excellent framework
-- PostgreSQL community for the robust database
-- All contributors and supporters of this project
-
----
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-1. Check the [Issues](https://github.com/krisharma955/Expense-Tracker-System/issues) page
-2. Create a new issue with detailed information
-3. Contact the maintainer
 
 ---
 
