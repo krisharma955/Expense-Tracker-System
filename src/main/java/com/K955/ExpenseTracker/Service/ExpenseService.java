@@ -1,11 +1,9 @@
 package com.K955.ExpenseTracker.Service;
 
-import com.K955.ExpenseTracker.DTOs.Expense.ExpenseRequest;
-import com.K955.ExpenseTracker.DTOs.Expense.ExpenseResponse;
-import com.K955.ExpenseTracker.DTOs.Expense.ExpenseSummaryResponse;
-import com.K955.ExpenseTracker.Entity.Expense;
+import com.K955.ExpenseTracker.DTOs.Expense.*;
 import org.jspecify.annotations.Nullable;
 
+import java.time.Instant;
 import java.util.List;
 
 public interface ExpenseService {
@@ -18,6 +16,8 @@ public interface ExpenseService {
     ExpenseResponse updateExpense(Long userId, Long expenseId, ExpenseRequest request);
 
     void deleteExpense(Long userId, Long expenseId);
+
+    List<ExpenseSummaryResponse> findExpensesAfter(Long userId, DateRequest request);
 
     List<ExpenseSummaryResponse> getTravelExpenses(Long userId);
 
@@ -32,4 +32,6 @@ public interface ExpenseService {
     List<ExpenseSummaryResponse> getHousingExpenses(Long userId);
 
     List<ExpenseSummaryResponse> getEntertainmentExpenses(Long userId);
+
+    List<ExpenseSummaryResponse> getExpensesBetween(Long userId, DurationRequest request);
 }

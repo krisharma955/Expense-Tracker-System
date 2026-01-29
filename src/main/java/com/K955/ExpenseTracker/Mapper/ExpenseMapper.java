@@ -3,7 +3,6 @@ package com.K955.ExpenseTracker.Mapper;
 import com.K955.ExpenseTracker.DTOs.Expense.ExpenseSummaryResponse;
 import com.K955.ExpenseTracker.DTOs.Expense.ExpenseResponse;
 import com.K955.ExpenseTracker.Entity.Expense;
-import com.K955.ExpenseTracker.Entity.User;
 import org.mapstruct.Mapper;
 
 import java.util.List;

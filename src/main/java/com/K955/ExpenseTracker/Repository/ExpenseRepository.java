@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -31,5 +32,9 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     )
     List<Expense> findTravelExpenses(@Param("userId") Long userId,
                                      @Param("category") Category category);
+
+    List<Expense> findByUserIdAndCreatedAtAfter(Long userId, Instant after);
+
+    List<Expense> findByUserIdAndCreatedAtBetween(Long userId, Instant start, Instant end);
 
 }

@@ -3,7 +3,6 @@ package com.K955.ExpenseTracker.Service.Impl;
 import com.K955.ExpenseTracker.DTOs.User.UpdateUserRequest;
 import com.K955.ExpenseTracker.DTOs.User.UserProfileResponse;
 import com.K955.ExpenseTracker.Entity.User;
-import com.K955.ExpenseTracker.Errors.BadRequestException;
 import com.K955.ExpenseTracker.Errors.ResourceNotFoundException;
 import com.K955.ExpenseTracker.Mapper.UserMapper;
 import com.K955.ExpenseTracker.Repository.UserRepository;
@@ -28,9 +27,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserProfileResponse getProfile(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         return userMapper.toUserProfileResponseFromUser(user);
     }
 
@@ -38,9 +34,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserProfileResponse updateUserProfile(Long userId, UpdateUserRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         user.setName(request.name());
         user.setPassword(passwordEncoder.encode(request.password()));
         userRepository.save(user);
@@ -51,9 +44,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void deleteUserProfile(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         userRepository.delete(user);
     }
 

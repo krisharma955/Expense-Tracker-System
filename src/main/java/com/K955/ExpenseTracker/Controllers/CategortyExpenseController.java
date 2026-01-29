@@ -1,6 +1,5 @@
 package com.K955.ExpenseTracker.Controllers;
 
-import com.K955.ExpenseTracker.DTOs.Expense.ExpenseResponse;
 import com.K955.ExpenseTracker.DTOs.Expense.ExpenseSummaryResponse;
 import com.K955.ExpenseTracker.Security.JwtService;
 import com.K955.ExpenseTracker.Service.ExpenseService;

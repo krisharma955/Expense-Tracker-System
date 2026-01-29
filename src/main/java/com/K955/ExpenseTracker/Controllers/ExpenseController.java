@@ -1,14 +1,15 @@
 package com.K955.ExpenseTracker.Controllers;
 
-import com.K955.ExpenseTracker.DTOs.Expense.ExpenseRequest;
-import com.K955.ExpenseTracker.DTOs.Expense.ExpenseResponse;
-import com.K955.ExpenseTracker.DTOs.Expense.ExpenseSummaryResponse;
+import com.K955.ExpenseTracker.DTOs.Expense.*;
 import com.K955.ExpenseTracker.Security.JwtService;
 import com.K955.ExpenseTracker.Service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
@@ -50,6 +51,18 @@ public class ExpenseController {
         Long userId = jwtService.getCurrentUserId();
         expenseService.deleteExpense(userId, expenseId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/after")
+    public ResponseEntity<List<ExpenseSummaryResponse>> getExpensesAfter(@RequestBody DateRequest request) {
+        Long userId = jwtService.getCurrentUserId();
+        return ResponseEntity.ok(expenseService.findExpensesAfter(userId, request));
+    }
+
+    @PostMapping("/between")
+    public ResponseEntity<List<ExpenseSummaryResponse>> getExpensesBetween(@RequestBody DurationRequest request) {
+        Long userId = jwtService.getCurrentUserId();
+        return ResponseEntity.ok(expenseService.getExpensesBetween(userId, request));
     }
 
 }

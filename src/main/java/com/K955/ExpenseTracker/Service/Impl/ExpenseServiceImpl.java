@@ -1,8 +1,6 @@
 package com.K955.ExpenseTracker.Service.Impl;
 
-import com.K955.ExpenseTracker.DTOs.Expense.ExpenseRequest;
-import com.K955.ExpenseTracker.DTOs.Expense.ExpenseResponse;
-import com.K955.ExpenseTracker.DTOs.Expense.ExpenseSummaryResponse;
+import com.K955.ExpenseTracker.DTOs.Expense.*;
 import com.K955.ExpenseTracker.Entity.Expense;
 import com.K955.ExpenseTracker.Entity.User;
 import com.K955.ExpenseTracker.Enums.Expense.Category;
@@ -15,6 +13,9 @@ import com.K955.ExpenseTracker.Service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -45,9 +46,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     public ExpenseResponse getExpenseById(Long userId, Long expenseId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new RuntimeException("Access Denied");
-        }
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Expense", expenseId.toString()));
         if(!expense.getUser().getId().equals(userId)) {
@@ -70,9 +68,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     public ExpenseResponse updateExpense(Long userId, Long expenseId, ExpenseRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new RuntimeException("Access Denied");
-        }
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Expense", expenseId.toString()));
         if(!expense.getUser().getId().equals(userId)) {
@@ -89,21 +84,49 @@ public class ExpenseServiceImpl implements ExpenseService {
     public void deleteExpense(Long userId, Long expenseId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Expense", expenseId.toString()));
+        if(!expense.getUser().getId().equals(userId)) {
+            throw new BadRequestException("Access Denied");
+        }
         expenseRepository.delete(expense);
+    }
+
+    @Override
+    public List<ExpenseSummaryResponse> findExpensesAfter(Long userId, DateRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
+
+        LocalDate date = LocalDate.of(request.year(), request.month(), request.day());
+        Instant instant = date
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant();
+
+        if(instant.isAfter(Instant.now())) {
+            throw new BadRequestException("Inappropriate Request");
+        }
+        return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findByUserIdAndCreatedAtAfter(userId, instant));
+    }
+
+    @Override
+    public List<ExpenseSummaryResponse> getExpensesBetween(Long userId, DurationRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
+
+        LocalDate startDate = LocalDate.of(request.startYear(), request.startMonth(), request.startDay());
+        LocalDate endDate = LocalDate.of(request.endYear(), request.endMonth(), request.endDay());
+
+        Instant start = startDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant end = endDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+
+        return expenseMapper.toListOfExpenseSummaryResponse(
+                expenseRepository.findByUserIdAndCreatedAtBetween(userId, start, end));
     }
 
     @Override
     public List<ExpenseSummaryResponse> getTravelExpenses(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         Category category = Category.TRAVEL;
         return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
     }
@@ -112,9 +135,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<ExpenseSummaryResponse> getShoppingExpenses(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         Category category = Category.SHOPPING;
         return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
     }
@@ -123,9 +143,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<ExpenseSummaryResponse> getMedicalExpenses(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         Category category = Category.MEDICAL;
         return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
     }
@@ -134,9 +151,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<ExpenseSummaryResponse> getFoodExpenses(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         Category category = Category.FOOD;
         return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
     }
@@ -145,9 +159,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<ExpenseSummaryResponse> getEducationExpenses(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         Category category = Category.EDUCATION;
         return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
     }
@@ -156,9 +167,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<ExpenseSummaryResponse> getHousingExpenses(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         Category category = Category.HOUSING;
         return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
     }
@@ -167,9 +175,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<ExpenseSummaryResponse> getEntertainmentExpenses(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId.toString()));
-        if(!user.getId().equals(userId)) {
-            throw new BadRequestException("Access Denied");
-        }
         Category category = Category.ENTERTAINMENT;
         return expenseMapper.toListOfExpenseSummaryResponse(expenseRepository.findTravelExpenses(userId, category));
     }
